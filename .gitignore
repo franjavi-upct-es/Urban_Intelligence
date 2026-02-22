@@ -1,0 +1,203 @@
+# .gitignore
+# Urban Intelligence Framework - Git Ignore Configuration
+
+# ===========================================================================
+# Python
+# ===========================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ===========================================================================
+# Virtual Environments
+# ===========================================================================
+.venv/
+venv/
+ENV/
+env/
+.env.local
+.env.*.local
+
+# UV
+.uv/
+uv.lock
+
+# ===========================================================================
+# IDE and Editors
+# ===========================================================================
+# VSCode
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Spyder
+.spyderproject
+.spyproject
+
+# ===========================================================================
+# Testing and Coverage
+# ===========================================================================
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# ===========================================================================
+# Type Checking
+# ===========================================================================
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytype/
+.pyre/
+
+# ===========================================================================
+# Documentation
+# ===========================================================================
+docs/_build/
+site/
+
+# ===========================================================================
+# Data Files (Large files should not be in git)
+# ===========================================================================
+data/raw/
+data/processed/
+data/weather_cache/
+data/spatial_cache/
+data/quality_reports/
+*.csv
+*.csv.gz
+*.parquet
+*.json
+!pyproject.toml
+!.pre-commit-config.yaml
+!city_registry.json
+
+# DuckDB databases
+*.duckdb
+*.duckdb.wal
+*.db
+
+# ===========================================================================
+# MLflow and Models
+# ===========================================================================
+mlruns/
+mlartifacts/
+models/*.pkl
+models/*.joblib
+models/*.xgb
+models/*.json
+!models/.gitkeep
+
+# ===========================================================================
+# Docker
+# ===========================================================================
+.docker/
+
+# ===========================================================================
+# OS Generated
+# ===========================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ===========================================================================
+# Logs
+# ===========================================================================
+logs/
+*.log
+*.log.*
+
+# ===========================================================================
+# Temporary Files
+# ===========================================================================
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+
+# ===========================================================================
+# Secrets and Credentials
+# ===========================================================================
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+credentials.json
+
+# ===========================================================================
+# DVC (Data Version Control)
+# ===========================================================================
+# Uncomment if using DVC
+# /data/*.dvc
+# .dvc/tmp
+# .dvc/cache
+
+# ===========================================================================
+# Project Specific
+# ===========================================================================
+# Keep these directories but ignore contents
+!data/.gitkeep
+!models/.gitkeep
+!logs/.gitkeep
