@@ -123,7 +123,7 @@ class DataService:
             logger.info(f"Generating synthetic data for {city_id}")
             from src.data.generator import SyntheticDataGenerator
 
-            generator = SyntheticDataGenerator(n_samples=5000, sed=hash(city_id) % 10000)
+            generator = SyntheticDataGenerator(n_samples=5000, seed=hash(city_id) % 10000)
             city_data.listings = generator.generate()
 
             # Save to cache
@@ -134,3 +134,50 @@ class DataService:
         self._cache[city_id] = city_data
 
         return city_data
+
+    def get_price_statistics(self, city_id: str) -> dict[str, Any]:
+        """Get price statistics for a city."""
+        data = self.get_city_data(city_id)
+
+        if data.listings is None:
+            return {"error": "No data available"}
+
+        prices = data.listings["price"].drop_nulls()
+
+        return {
+            "city_id": city_id,
+            "listings_count": data.listings.height,
+            "price_mean": float(prices.mean()),  # type: ignore[arg-type]
+            "price_median": float(prices.median()),  # type: ignore[arg-type]
+            "price_std": float(prices.std()),  # type: ignore[arg-type]
+            "price_min": float(prices.min()),  # type: ignore[arg-type]
+            "price_max": float(prices.max()),  # type: ignore[arg-type]
+        }
+
+    def get_data_status(self, city_id: str) -> dict[str, Any]:
+        """Get data status for a city."""
+        city_id = city_id.lower()
+
+        is_cached = city_id in self._cache
+        cache_path = self.data_dir / "cache" / f"{city_id}_listings.parquet"
+
+        return {
+            "city_id": city_id,
+            "exists": is_cached or cache_path.exists(),
+            "in_memory": is_cached,
+            "on_disk": cache_path.exists(),
+        }
+
+    def clear_cache(self, city_id: str | None = None) -> None:
+        """Clear cached data."""
+        if city_id:
+            self._cache.pop(city_id.lower(), None)
+            cache_path = self.data_dir / "cache" / f"{city_id.lower()}_listings.parquet"
+            if cache_path.exists():
+                cache_path.unlink()
+        else:
+            self._cache.clear()
+            cache_dir = self.data_dir / "cache"
+            if cache_dir.exists():
+                for f in cache_dir.glob("*.parquet"):
+                    f.unlink()

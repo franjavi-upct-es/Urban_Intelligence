@@ -9,7 +9,9 @@ description = "Urban Intelligence Framework for Airbnb Price Prediction using Po
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-authors = [{ name = "Urban Intelligence Team", email = "team@urbanintel.dev" }]
+authors = [
+  { name = "Francisco Javier Mercader Martínez", email = "fcojavier.mercader04@gmail.com" },
+]
 keywords = [
   "airbnb",
   "machine-learning",
@@ -68,7 +70,6 @@ dev = [
   "httpx>=0.27.0",
   # Linting and formatting
   "ruff>=0.5.0",
-  "mypy>=1.10.0",
   # Pre-commit
   "pre-commit>=3.7.0",
   # Security
@@ -99,13 +100,6 @@ ignore = ["ANN101", "ANN102", "ANN401"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["ANN"]
-
-[tool.mypy]
-python_version = "3.11"
-strict = true
-warn_return_any = true
-warn_unused_ignores = true
-ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
