@@ -4,7 +4,7 @@
 
 .PHONY: help install dev-install test lint format typecheck clean \
         docker-build docker-run docker-stop \
-        fetch train predict api dashboard \
+        fetch train predict api dashboard frontend \
         docs quality retrain
 
 # Default target
@@ -32,8 +32,10 @@ help:
 	@echo ""
 	@echo "Applications:"
 	@echo "  make api            Start FastAPI server"
-	@echo "  make dashboard      Start Streamlit dashboard"
+	@echo "  make frontend       Start React frontend (dev)"
+	@echo "  make frontend-build Build frontend for production"
 	@echo "  make mlflow         Start MLflow UI"
+	@echo "  make dev            Start development environment"
 	@echo ""
 	@echo "Docker:"
 	@echo "  make docker-build   Build Docker image"
@@ -66,7 +68,7 @@ install:
 
 dev-install:
 	@echo "Installing development dependencies..."
-	uv sync --dev
+	uv sync --all-extras
 	uv run pre-commit install
 
 setup: dev-install
@@ -166,6 +168,18 @@ dashboard:
 	@echo "Starting Streamlit dashboard..."
 	$(STREAMLIT) run app/streamlit_app.py --server.port 8501
 
+frontend:
+	@echo "Starting React frontend..."
+	cd frontend && npm run dev
+
+frontend-install:
+	@echo "Installing frontend dependencies..."
+	cd frontend && npm install
+
+frontend-build:
+	@echo "Building frontend for production..."
+	cd frontend && npm run build
+
 mlflow:
 	@echo "Starting MLflow UI..."
 	uv run mlflow ui --host 127.0.0.1 --port 5000
@@ -177,6 +191,11 @@ demo:
 cli:
 	@echo "Starting interactive CLI..."
 	$(PYTHON) scripts/data_cli.py interactive
+
+# Start both API and frontend
+dev:
+	@echo "Starting development environment..."
+	@echo "Run 'make api' in one terminal and 'make frontend' in another"
 
 # =============================================================================
 # Docker

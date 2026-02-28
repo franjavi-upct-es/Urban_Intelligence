@@ -1,25 +1,103 @@
-# Urban Intelligence - Version History
+# Urban Intelligence Framework - Version History
 
-# All notable change to this project are documented here
+# All notable changes to this project are documented here
 
 # Changelog
 
 All notable changes to the Urban Intelligence Framework are documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 1.0.0 - 2025-01
+## [1.2.0] - 2026-02
+
+### Added
+
+#### A/B Testing Framework
+
+- **ABTestingManager**: Complete A/B testing infrastructure
+- Traffic splitting with consistent hashing
+- Statistical significance testing (t-test, ANOVA)
+- Experiment lifecycle management (draft, running, paused, completed)
+- Real-time metrics per variant
+
+#### Multi-Model Ensemble
+
+- **EnsembleModel**: Combine multiple models for improved predictions
+- Support for averaging, weighted averaging, and stacking strategies
+- Automatic weight optimization based on validation performance
+- Uncertainty estimation from model disagreement
+
+#### Time Series Forecasting
+
+- **PriceForecaster**: Seasonal price forecasting
+- Holt-Winters triple exponential smoothing
+- Trend and seasonality decomposition
+- Confidence interval estimation
+- Anomaly detection
+
+#### Feature Store
+
+- **FeatureStore**: Centralized feature management
+- Feature versioning and lineage tracking
+- Built-in feature computations
+- Feature set management
+- Statistics computation
+
+#### React + TypeScript Frontend
+
+- Modern responsive dashboard
+- Real-time data visualization with Recharts
+- Dark/light theme support
+- Mobile-friendly design
+- Pages: Dashboard, Predict, Cities, Analytics, Experiments, Monitoring, Settings
+
+#### New API Endpoints
+
+- `/experiments/*` - A/B testing management
+- `/monitoring/*` - Performance monitoring
+- `/monitoring/drift` - Drift detection reports
+- `/monitoring/alerts` - Alert management
+
+### Changed
+
+- Replaced Streamlit with React + TypeScript frontend
+- Enhanced API with modular routers
+- Improved monitoring with real-time metrics
+
+## [1.1.0] - 2026-02
+
+### Added
+
+#### Real-time Updates
+
+- WebSocket support for live metrics
+- Real-time prediction streaming
+- Live alert notifications
+
+#### Mobile-Responsive Dashboard
+
+- Responsive layout for all screen sizes
+- Touch-friendly controls
+- Collapsible sidebar navigation
+
+### Changed
+
+- Improved chart performance
+- Better error handling in API
+
+## [1.0.0] - 2026-01
 
 ### Added
 
 #### Core Architecture
 
-- **DataService**: Unified API implementing "fetch one, query fast" pattern
+- **DataService**: Unified API implementing "fetch once, query fast" pattern
 - **CityRegistry**: City metadata management with automatic discovery
 - **CacheManager**: DuckDB-based intelligent caching layer
 - **InsideAirbnbScraper**: Automated web scraper for data discovery
 
-#### Data Adquisition
+#### Data Acquisition
 
 - Automated scraping from Inside Airbnb with rate limiting
 - Open-Meteo weather API integration (2+ years historical data)
@@ -29,7 +107,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 #### ETL Pipeline
 
 - **AirbnbCleaner**: Polars-based data cleaning with price parsing
-- **FeatureTransformer:** Feature engineering and encoding
+- **FeatureTransformer**: Feature engineering and encoding
 - **SpatialEnricher**: Geospatial feature extraction
 
 #### Feature Engineering
@@ -45,17 +123,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **HyperparameterOptimizer**: Optuna Bayesian optimization
 - Cross-validation and comprehensive metrics
 
+#### Model Monitoring
+
+- **DriftDetector**: Statistical drift detection (KS, Chi-squared, PSI)
+- **PerformanceMonitor**: Real-time performance tracking
+- Automated alerting and retraining triggers
+
 #### Data Validation
 
 - **DataValidator**: Great Expectations pattern validation
 - Multi-stage validation (raw, cleaned, enriched, model input)
 - Detailed validation reports
-
-#### User Interfaces
-
-- **Interactive CLI**: Command-line data management tool
-- **Streamlit Dashboard**: Web-based visualization and prediction
-- **FastAPI REST API**: Command-line data management tool
 
 #### DevOps & MLOps
 
@@ -66,89 +144,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Pre-commit hooks for code quality
 - Makefile for common commands
 
-#### Documentation
-
-- ARCHITECTURE.md: System design and patterns
-- DATA_ACQUISITION_GUIDE.md: Step-by-step data setup
-- MASTER_SETUP_GUIDE.md: Complete installation guide
-- PROJECT_MAP.md: Complete file inventory
-- Comprehensive docstrings throughout
-
-### Technical Highlights
-
-- **Performance:** Cached queries execute in <10ms
-- **Scalability:** Handles 100K+ listings per city
-- **Extensibility:** Plugin architecture for new data sources
-- **Reliability:** Graceful degradation on network failures
-- **Reproducibility:** Full pipeline reproducibility via DVC
-
-### Design Patterns Implemented
-
-- **Facade:** DataService simplifies complex subsystems
-- **Repository:** CacheManager abstracts storage
-- **Strategy:** Pluggable data source implementations
-- **Observer:** Progress callbacks for UI updates
-- **Factory:** Dynamic city and data source creation
-
-### Dependencies
-
-Core stack:
-
-- Python 3.11+
-- Polars 1.0+ (data processing)
-- DuckDB 1.0+ (analytical database)
-- XGBoost 2.1+ (ML model)
-- MLflow 2.15+ (experiment tracking)
-- Optuna 3.6+ (hyperparameter optimization)
-- Streamlit 1.37+ (dashboard)
-- FastAPI 0.111+ (REST API)
-- Pydantic 2.8+ (validation)
-
----
-
-## 0.10.0 - Initial Development
-
-### Added
-
-- Project scaffolding and structure
-- Basic ETL pipeline prototype
-- Initial model training script
-- Streamlit dashboard MVP
-
 ---
 
 ## Roadmap
 
-### Planned for v1.1.0
-
-- [ ] Multi-model ensemble support
-- [ ] Real-time price updates
-- [ ] Mobile-responsive dashboard
-
-### Planned for v1.2.0
-
-- [ ] A/B testing framework
-- [ ] Feature store integration
-- [ ] Advanced NLP for reviews
-- [ ] Image feature extraction
-
 ### Planned for v2.0.0
 
-- [ ] Multi-city model transfer learning
-- [ ] Time series price forecasting
-- [ ] Automated data quality remediation
+- [ ] Multi-city transfer learning
 - [ ] GraphQL API
-
----
-
-## Contributing
-
-See CONTRIBUTING.md for guidelines on:
-
-- Code style (Ruff formatting)
-- Commit conventions (Conventional Commits)
-- Pull request process
-- Testing requirements
+- [ ] Advanced NLP for reviews (transformers)
+- [ ] Image feature extraction
+- [ ] Automated data quality remediation
 
 ---
 

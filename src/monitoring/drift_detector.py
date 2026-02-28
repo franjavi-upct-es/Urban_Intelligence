@@ -373,7 +373,7 @@ class DriftDetector:
             return DriftSeverity.NONE
 
         # Count severities
-        severity_counts = {s: 0 for s in DriftSeverity}
+        severity_counts = dict.fromkeys(DriftSeverity, 0)
         for r in results:
             severity_counts[r.severity] += 1
 

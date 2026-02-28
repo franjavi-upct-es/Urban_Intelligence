@@ -22,6 +22,7 @@ Example:
 """
 
 from src.features.calendar_features import CalendarFeatureEngineer, SeasonalPriceAdjuster
+from src.features.feature_store import FeatureDefinition, FeatureSet, FeatureStore, FeatureType
 from src.features.text_features import ReviewAggregator, SentimentScore, TextFeatureEngineer
 
 __all__ = [
@@ -32,4 +33,9 @@ __all__ = [
     "TextFeatureEngineer",
     "ReviewAggregator",
     "SentimentScore",
+    # Feature store
+    "FeatureStore",
+    "FeatureDefinition",
+    "FeatureSet",
+    "FeatureType",
 ]

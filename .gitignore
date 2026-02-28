@@ -26,6 +26,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+node_modules/
 
 # PyInstaller
 *.manifest
@@ -125,6 +126,7 @@ data/quality_reports/
 !pyproject.toml
 !.pre-commit-config.yaml
 !city_registry.json
+!package.json
 
 # DuckDB databases
 *.duckdb
