@@ -126,7 +126,7 @@ data/quality_reports/
 !pyproject.toml
 !.pre-commit-config.yaml
 !city_registry.json
-!package.json
+
 
 # DuckDB databases
 *.duckdb

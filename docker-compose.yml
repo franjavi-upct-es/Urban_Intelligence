@@ -1,0 +1,113 @@
+# docker-compose.yml
+# Urban Intelligence Framework v2.0.0
+# Full-stack orchestration: backend, frontend, MLflow, Redis
+
+version: "3.9"
+
+services:
+  # ─────────────────────────────────────────────
+  # Redis — cache, rate limiting, WebSocket broker
+  # ─────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: uif_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - uif_network
+
+  # ─────────────────────────────────────────────
+  # MLflow — experiment tracking and model registry
+  # ─────────────────────────────────────────────
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.14.1
+    container_name: uif_mlflow
+    restart: unless-stopped
+    ports:
+      - "5001:5000"
+    volumes:
+      - mlflow_data:/mlflow
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri sqlite:///mlflow/mlflow.db
+      --default-artifact-root /mlflow/artifacts
+    networks:
+      - uif_network
+
+  # ─────────────────────────────────────────────
+  # Backend — FastAPI REST + GraphQL
+  # ─────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: uif_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - URBAN_REDIS_URL=redis://redis:6379
+      - URBAN_MLFLOW_TRACKING_URI=http://mlflow:5000
+      - URBAN_LOG_LEVEL=INFO
+      - URBAN_DATABASE_PATH=/app/data/urban_intelligence.db
+    volumes:
+      - backend_data:/app/data
+      - mlflow_data:/app/mlruns
+    depends_on:
+      redis:
+        condition: service_healthy
+      mlflow:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - uif_network
+
+  # ─────────────────────────────────────────────
+  # Frontend — React + TypeScript (Vite)
+  # ─────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: uif_frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_WS_URL=ws://localhost:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - uif_network
+
+# ─────────────────────────────────────────────
+# Named volumes
+# ─────────────────────────────────────────────
+volumes:
+  redis_data:
+  mlflow_data:
+  backend_data:
+
+# ─────────────────────────────────────────────
+# Internal network
+# ─────────────────────────────────────────────
+networks:
+  uif_network:
+    driver: bridge

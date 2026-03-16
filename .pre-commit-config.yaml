@@ -13,7 +13,7 @@ repos:
   # General Hooks
   # ===========================================================================
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
       - id: check-added-large-files
         args: ["--maxkb=1000"]
@@ -42,7 +42,7 @@ repos:
   # Ruff - Fast Python Linter and Formatter
   # ===========================================================================
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.5.0
+    rev: v0.15.6
     hooks:
       # Run the linter
       - id: ruff
@@ -56,31 +56,31 @@ repos:
   # MyPy - Static Type Checking
   # ===========================================================================
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.10.0
+    rev: v1.19.1
     hooks:
       - id: mypy
         additional_dependencies:
           - pydantic>=2.0
           - polars>=1.0
         args: ["--ignore-missing-imports"]
-        exclude: ^tests/
+        exclude: ^(tests/|backend/tests/)
 
   # ===========================================================================
   # Security Checks
   # ===========================================================================
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.8
+    rev: 1.9.4
     hooks:
       - id: bandit
         args: ["-c", "pyproject.toml"]
         additional_dependencies: ["bandit[toml]"]
-        exclude: ^tests/
+        exclude: ^(tests/|backend/tests/)
 
   # ===========================================================================
   # Markdown Linting
   # ===========================================================================
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.41.0
+    rev: v0.48.0
     hooks:
       - id: markdownlint
         args: ["--fix", "--disable", "MD013", "MD033", "MD041"]
@@ -89,7 +89,7 @@ repos:
   # YAML Linting
   # ===========================================================================
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.35.1
+    rev: v1.38.0
     hooks:
       - id: yamllint
         args: ["-d", "{extends: relaxed, rules: {line-length: disable}}"]
@@ -98,7 +98,7 @@ repos:
   # Conventional Commits
   # ===========================================================================
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v3.2.0
+    rev: v4.4.0
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]

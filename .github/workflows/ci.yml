@@ -1,6 +1,6 @@
 # .github/workflows/ci.yml
-# Urban Intelligence Framework - Continuous Integration Pipeline
-# Runs tests, linting, and type checking on every push and PR
+# Urban Intelligence Framework v2.0.0
+# Continuous Integration: lint, test build on every push and PR
 
 name: CI
 
@@ -10,75 +10,14 @@ on:
   pull_request:
     branches: [main, develop]
 
-env:
-  PYTHON_VERSION: "3.11"
-  UV_VERSION: "0.4.0"
-
 jobs:
-  # ===========================================================================
-  # Linting and Formatting
-  # ===========================================================================
-  lint:
-    name: Lint & Format
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install UV
-        uses: astral-sh/setup-uv@v1
-        with:
-          version: ${{ env.UV_VERSION }}
-
-      - name: Install dependencies
-        run: uv sync --all-extras
-
-      - name: Run Ruff linter
-        run: uv run ruff check src/ scripts/ tests/
-
-      - name: Run Ruff formatter check
-        run: uv run ruff format --check src/ scripts/ tests/
-
-  # ===========================================================================
-  # Type Checking
-  # ===========================================================================
-  typecheck:
-    name: Type Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install UV
-        uses: astral-sh/setup-uv@v1
-        with:
-          version: ${{ env.UV_VERSION }}
-
-      - name: Install dependencies
-        run: uv sync --dev
-
-      - name: Run MyPy
-        run: uv run mypy src/ --ignore-missing-imports
-        continue-on-error: true # Don't fail build on type errors initially
-
-  # ===========================================================================
-  # Unit Tests
-  # ===========================================================================
-  test:
-    name: Test (Python ${{ matrix.python-version }})
+  # ————————————————————————————————————
+  # Backend: lint + test
+  # ————————————————————————————————————
+  backend:
+    name: Backend (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
         python-version: ["3.11", "3.12"]
 
@@ -86,63 +25,107 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
       - name: Install UV
-        uses: astral-sh/setup-uv@v1
+        uses: astral-sh/setup-uv@v3
         with:
-          version: ${{ env.UV_VERSION }}
+          version: "latest"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: uv sync --dev
+        working-directory: backend
+        run: uv sync --all-extras
 
-      - name: Run tests with coverage
-        run: uv run pytest --cov=src --cov-report=xml --cov-report=term-missing
+      - name: Lint with ruff
+        working-directory: backend
+        run: uv run ruff check src/ api/ scripts/
 
-      - name: Upload coverage to Codecov
+      - name: Check formatting
+        working-directory: backend
+        run: uv run ruff format --check src/ api/ scripts/
+
+      - name: Run tests
+        working-directory: backend
+        run: uv run pytest tests/ -v --cov=src --cov-report=xml
+
+      - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
-          file: ./coverage.xml
-          fail_ci_if_error: false
+          files: backend/coverage.xml
+          flags: backend
 
-  # ===========================================================================
-  # Integration Tests
-  # ===========================================================================
-  integration:
-    name: Integration Tests
+  # ————————————————————————————————————
+  # Frontend: type-check + build
+  # ————————————————————————————————————
+  frontend:
+    name: Frontend (Node.js 20)
     runs-on: ubuntu-latest
-    needs: [lint, test]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install UV
-        uses: astral-sh/setup-uv@v1
-        with:
-          version: ${{ env.UV_VERSION }}
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
-        run: uv sync --dev
+        working-directory: frontend
+        run: npm ci
 
-      - name: Run integration tests
-        run: uv run pytest tests/integration/ -v --tb=short
-        continue-on-error: true # Integration tests may need network
+      - name: Type check
+        working-directory: frontend
+        run: npm run type-check
 
-  # ===========================================================================
-  # Build Docker Image
-  # ===========================================================================
-  docker:
-    name: Build Docker Image
+      - name: Lint
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+
+  # ————————————————————————————————————
+  # Mobile: Flutter analyze + test
+  # ————————————————————————————————————
+  mobile:
+    name: Mobile (Flutter)
     runs-on: ubuntu-latest
-    needs: [lint, test]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.22.x"
+          channel: "stable"
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: mobile
+        run: flutter analyze
+
+      - name: Run tests
+        working-directory: mobile
+        run: flutter test
+
+  # ─────────────────────────────────────────────
+  # Docker: build images
+  # ─────────────────────────────────────────────
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -150,29 +133,20 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image
+      - name: Build backend image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./backend
           push: false
-          tags: urban-intelligence:${{ github.sha }}
+          tags: urban-intelligence/backend:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # ===========================================================================
-  # Security Scan
-  # ===========================================================================
-  security:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+      - name: Build frontend image
+        uses: docker/build-push-action@v5
         with:
-          scan-type: "fs"
-          scan-ref: "."
-          severity: "CRITICAL,HIGH"
-          exit-code: "0" # Don't fail on vulnerabilities initially
+          context: ./frontend
+          push: false
+          tags: urban-intelligence/frontend:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
