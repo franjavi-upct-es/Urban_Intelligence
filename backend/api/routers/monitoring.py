@@ -17,6 +17,7 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
+
 from src.monitoring.performance_monitor import PerformanceMonitor
 
 router = APIRouter()

@@ -15,9 +15,10 @@ WORKDIR /app
 # Copy dependency files first (layer caching)
 COPY pyproject.toml .
 
-# Install dependencies into a virtual env at /app/.venv
+# Install only third-party dependencies into /app/.venv.
+# The project source is copied in the runtime stage and imported via PYTHONPATH.
 RUN uv venv .venv && \
-  uv sync --no-dev
+  uv sync --no-dev --no-install-project
 
 # ———————————————————————————————————————————————————————————————
 # Stage 2: runtime — lean production image
@@ -59,4 +60,4 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD curl -f http://localhost:8000/health || exit 1
 
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

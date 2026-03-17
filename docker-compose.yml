@@ -2,8 +2,6 @@
 # Urban Intelligence Framework v2.0.0
 # Full-stack orchestration: backend, frontend, MLflow, Redis
 
-version: "3.9"
-
 services:
   # ─────────────────────────────────────────────
   # Redis — cache, rate limiting, WebSocket broker

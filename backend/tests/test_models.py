@@ -13,6 +13,7 @@ from __future__ import annotations
 import numpy as np
 import polars as pl
 import pytest
+
 from src.data.generator import SyntheticDataGenerator
 from src.etl.cleaner import AirbnbCleaner
 from src.etl.transformer import FeatureTransformer

@@ -21,6 +21,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
+
 from src.modeling.ab_testing import ABTestingManager, Variant
 
 router = APIRouter()

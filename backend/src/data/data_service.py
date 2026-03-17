@@ -213,7 +213,6 @@ class DataService:
         self._processed_path = settings.processed_data_path
         self._raw_path.mkdir(parents=True, exist_ok=True)
         self._processed_path.mkdir(parents=True, exist_ok=True)
-        db.connect()
 
     # ── Public API ────────────────────────────────────────────────────────
 

@@ -22,12 +22,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 from prometheus_client import make_asgi_app
-from src.config import settings
-from src.database import db
 
 from api.graphql_schema import graphql_app
 from api.routers import cities, experiments, monitoring, predictions
 from api.websocket import ws_router
+from src.config import settings
+from src.database import db
 
 logger = structlog.get_logger(__name__)
 

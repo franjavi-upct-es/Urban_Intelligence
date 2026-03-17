@@ -30,6 +30,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import structlog
+
 from src.config import settings
 from src.data.data_service import INSIDE_AIRBNB_CATALOGUE
 from src.database import db

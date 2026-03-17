@@ -28,6 +28,7 @@ from typing import Any
 
 import structlog
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+
 from src.data.data_service import DataService, FetchProgress
 from src.monitoring.performance_monitor import PerformanceMonitor
 

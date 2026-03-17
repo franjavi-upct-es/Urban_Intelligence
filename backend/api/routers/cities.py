@@ -18,6 +18,7 @@ from typing import Any
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
 from pydantic import BaseModel
+
 from src.data.data_service import INSIDE_AIRBNB_CATALOGUE, DataService
 
 router = APIRouter()

@@ -16,8 +16,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import strawberry
-from src.data.data_service import INSIDE_AIRBNB_CATALOGUE, DataService
 from strawberry.fastapi import GraphQLRouter
+
+from src.data.data_service import INSIDE_AIRBNB_CATALOGUE, DataService
 
 _service = DataService()
 
