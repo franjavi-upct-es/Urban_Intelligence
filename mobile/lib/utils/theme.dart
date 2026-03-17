@@ -21,6 +21,15 @@ class AppTheme {
 
   static ThemeData dark() {
     final base = ThemeData.dark(useMaterial3: true);
+    final dynamic cardThemeCompat = (base.cardTheme as dynamic).copyWith(
+      color: surfaceCard,
+      elevation: 0.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: const BorderSide(color: border, width: 0.5),
+      ),
+      margin: EdgeInsets.zero,
+    );
 
     // Use Google Fonts Inter as the base text theme
     final interTextTheme = GoogleFonts.interTextTheme(base.textTheme).apply(
@@ -50,15 +59,7 @@ class AppTheme {
           color: textPrimary,
         ),
       ),
-      cardTheme: CardThemeData(
-        color: surfaceCard,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: border, width: 0.5),
-        ),
-        margin: EdgeInsets.zero,
-      ),
+      cardTheme: cardThemeCompat,
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surface900,
