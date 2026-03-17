@@ -51,7 +51,10 @@ export default function DashboardPage() {
   const { data: alertsData } = useAllAlerts();
   const { data: historyData } = usePredictionHistory(50);
 
-  const predictions = historyData?.history ?? [];
+  const predictions = useMemo(
+    () => historyData?.history ?? [],
+    [historyData?.history],
+  );
   const timeSeries = useMemo(() => buildTimeSeries(predictions), [predictions]);
   const distribution = useMemo(
     () => buildDistribution(predictions.map((p) => p.predicted_price)),

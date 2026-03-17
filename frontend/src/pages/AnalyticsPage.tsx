@@ -51,7 +51,10 @@ export default function AnalyticsPage() {
     limit: 1000,
   });
 
-  const listings = listingsData?.listings ?? [];
+  const listings = useMemo(
+    () => listingsData?.listings ?? [],
+    [listingsData?.listings],
+  );
   const prices = useMemo(
     () => listings.map((l) => l.price ?? 0).filter(Boolean),
     [listings],
@@ -131,8 +134,8 @@ export default function AnalyticsPage() {
                 value: prices.length
                   ? `$${prices
                       .slice()
-                      .sort((a, b) => a - b)
-                      [Math.floor(prices.length / 2)].toFixed(0)}`
+                      .sort((a, b) => a - b)[Math.floor(prices.length / 2)]
+                      .toFixed(0)}`
                   : "—",
               },
             ].map(({ label, value }) => (
