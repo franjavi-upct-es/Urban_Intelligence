@@ -50,9 +50,7 @@ class AppTheme {
           color: textPrimary,
         ),
       ),
-      // Cast through dynamic to keep compatibility across Flutter versions
-      // where `cardTheme` expects either CardTheme or CardThemeData.
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: surfaceCard,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -60,7 +58,7 @@ class AppTheme {
           side: const BorderSide(color: border, width: 0.5),
         ),
         margin: EdgeInsets.zero,
-      ) as dynamic,
+      ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surface900,
