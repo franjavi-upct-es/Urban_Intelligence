@@ -50,7 +50,9 @@ class AppTheme {
           color: textPrimary,
         ),
       ),
-      cardTheme: CardThemeData(
+      // Cast through dynamic to keep compatibility across Flutter versions
+      // where `cardTheme` expects either CardTheme or CardThemeData.
+      cardTheme: CardTheme(
         color: surfaceCard,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -58,7 +60,7 @@ class AppTheme {
           side: const BorderSide(color: border, width: 0.5),
         ),
         margin: EdgeInsets.zero,
-      ),
+      ) as dynamic,
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surface900,
@@ -90,7 +92,7 @@ class AppTheme {
       dividerTheme: const DividerThemeData(color: border, thickness: 0.5),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: surface800,
-        indicatorColor: brand600.withValues(alpha: 0.2),
+        indicatorColor: brand600.withAlpha((0.2 * 255).round()),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return const IconThemeData(color: brand500);

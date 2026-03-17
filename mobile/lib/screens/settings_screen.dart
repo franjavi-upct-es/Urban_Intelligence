@@ -1,6 +1,7 @@
 // mobile/lib/screens/settings_screen.dart
 // Urban Intelligence Framework v2.0.0
 // App settings and configuration screen
+// ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,7 +59,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       error: (_, __) => Text(selectedCity,
                           style: const TextStyle(color: AppTheme.textMuted)),
                       data: (cities) => DropdownButtonFormField<String>(
-                        initialValue: selectedCity,
+                        value: selectedCity,
                         dropdownColor: AppTheme.surface800,
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.symmetric(
@@ -301,7 +302,7 @@ class _Toggle extends StatelessWidget {
       subtitle: Text(subtitle,
           style: const TextStyle(fontSize: 11, color: AppTheme.textMuted)),
       value: value,
-      activeThumbColor: AppTheme.brand500,
+      activeColor: AppTheme.brand500,
       onChanged: onChanged,
     );
   }

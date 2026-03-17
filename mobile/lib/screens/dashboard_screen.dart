@@ -145,7 +145,7 @@ class DashboardScreen extends ConsumerWidget {
                         leading: CircleAvatar(
                           radius: 16,
                           backgroundColor: city.isCached
-                              ? AppTheme.success.withValues(alpha: 0.15)
+                              ? AppTheme.success.withAlpha((0.15 * 255).round())
                               : AppTheme.border,
                           child: Icon(
                             city.isCached
@@ -250,14 +250,15 @@ class _Header extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppTheme.brand600.withValues(alpha: 0.3),
+            AppTheme.brand600.withAlpha((0.3 * 255).round()),
             AppTheme.surface800
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.brand500.withValues(alpha: 0.2)),
+        border:
+            Border.all(color: AppTheme.brand500.withAlpha((0.2 * 255).round())),
       ),
       child: Row(
         children: [

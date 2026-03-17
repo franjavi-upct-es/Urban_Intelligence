@@ -35,7 +35,12 @@ jobs:
 
       - name: Install dependencies
         working-directory: backend
-        run: uv sync --group dev --frozen
+        run: |
+          if [ -f uv.lock ]; then
+            uv sync --group dev --frozen
+          else
+            uv sync --group dev
+          fi
 
       - name: Lint with ruff
         working-directory: backend

@@ -1,6 +1,7 @@
 // mobile/lib/screens/predict_screen.dart
 // Urban Intelligence Framework v2.0.0
 // Price prediction form screen for the mobile app
+// ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -141,10 +142,10 @@ class _PredictScreenState extends ConsumerState<PredictScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppTheme.error.withValues(alpha: 0.1),
+                  color: AppTheme.error.withAlpha((0.1 * 255).round()),
                   borderRadius: BorderRadius.circular(10),
-                  border:
-                      Border.all(color: AppTheme.error.withValues(alpha: 0.4)),
+                  border: Border.all(
+                      color: AppTheme.error.withAlpha((0.4 * 255).round())),
                 ),
                 child: Row(
                   children: [
@@ -185,7 +186,7 @@ class _PredictScreenState extends ConsumerState<PredictScreen> {
                     // Room type
                     _buildLabel('Room Type'),
                     DropdownButtonFormField<String>(
-                      initialValue: req.roomType,
+                      value: req.roomType,
                       dropdownColor: AppTheme.surface800,
                       decoration: const InputDecoration(
                         contentPadding:
@@ -255,7 +256,7 @@ class _PredictScreenState extends ConsumerState<PredictScreen> {
                           title: const Text('Superhost',
                               style: TextStyle(fontSize: 13)),
                           value: req.hostIsSuperhost,
-                          activeThumbColor: AppTheme.brand500,
+                          activeColor: AppTheme.brand500,
                           onChanged: (v) => ref
                               .read(predictionRequestProvider.notifier)
                               .state = req.copyWith(hostIsSuperhost: v),
@@ -268,7 +269,7 @@ class _PredictScreenState extends ConsumerState<PredictScreen> {
                           title: const Text('Instant Book',
                               style: TextStyle(fontSize: 13)),
                           value: req.instantBookable,
-                          activeThumbColor: AppTheme.brand500,
+                          activeColor: AppTheme.brand500,
                           onChanged: (v) => ref
                               .read(predictionRequestProvider.notifier)
                               .state = req.copyWith(instantBookable: v),
@@ -363,7 +364,7 @@ class _CitySelector extends ConsumerWidget {
         ),
       ),
       data: (cities) => DropdownButtonFormField<String>(
-        initialValue: currentValue,
+        value: currentValue,
         dropdownColor: AppTheme.surface800,
         decoration: const InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -394,14 +395,15 @@ class _ResultCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppTheme.brand600.withValues(alpha: 0.2),
+            AppTheme.brand600.withAlpha((0.2 * 255).round()),
             AppTheme.surface800
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.brand500.withValues(alpha: 0.4)),
+        border:
+            Border.all(color: AppTheme.brand500.withAlpha((0.4 * 255).round())),
       ),
       child: Column(
         children: [

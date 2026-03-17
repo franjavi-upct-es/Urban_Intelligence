@@ -166,7 +166,7 @@ class _CityTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? AppTheme.brand500.withValues(alpha: 0.6)
+                ? AppTheme.brand500.withAlpha((0.6 * 255).round())
                 : AppTheme.border,
           ),
         ),

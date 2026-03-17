@@ -175,11 +175,11 @@ class _AlertCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isCritical = alert.isCritical;
     final borderColor = isCritical
-        ? AppTheme.error.withValues(alpha: 0.5)
-        : AppTheme.warning.withValues(alpha: 0.5);
+        ? AppTheme.error.withAlpha((0.5 * 255).round())
+        : AppTheme.warning.withAlpha((0.5 * 255).round());
     final bgColor = isCritical
-        ? AppTheme.error.withValues(alpha: 0.08)
-        : AppTheme.warning.withValues(alpha: 0.08);
+        ? AppTheme.error.withAlpha((0.08 * 255).round())
+        : AppTheme.warning.withAlpha((0.08 * 255).round());
     final iconColor = isCritical ? AppTheme.error : AppTheme.warning;
 
     return Container(
@@ -244,9 +244,10 @@ class _AllClearCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.success.withValues(alpha: 0.08),
+        color: AppTheme.success.withAlpha((0.08 * 255).round()),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppTheme.success.withValues(alpha: 0.3)),
+        border:
+            Border.all(color: AppTheme.success.withAlpha((0.3 * 255).round())),
       ),
       child: const Row(
         children: [
