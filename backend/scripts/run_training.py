@@ -12,18 +12,17 @@ saves the final model to disk.
 Usage:
     python scripts/run_training.py                       # all cities
     python scripts/run_training.py --city london         # single city
-    python scripts/run_training.py --city london --transfer  # with transfer learning
-    python scripts/run_training.py --trials 20           # fewer Optuna trials (faster)
+    python scripts/run_training.py --city london --transfer
+        # with transfer learning
+    python scripts/run_training.py --trials 20
+        # fewer Optuna trials (faster)
 """
 
 from __future__ import annotations
 
 import argparse
 import pickle  # nosec B403
-import sys
 from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import numpy as np
 import structlog

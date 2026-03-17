@@ -40,49 +40,54 @@ build: ## Build all Docker images without cache
 # Individual service shortcuts
 # ─────────────────────────────────────────────
 backend: ## Start backend only (dev mode with reload)
-	cd backend && uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+	cd backend && uv run uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
 
 frontend: ## Start frontend dev server
 	cd frontend && npm run dev
 
 mlflow: ## Start MLflow tracking server
-	cd backend && mlflow ui --host 0.0.0.0 --port 5001
+	cd backend && uv run mlflow ui --host 0.0.0.0 --port 5001
 
 # ─────────────────────────────────────────────
 # Backend pipeline commands
 # ─────────────────────────────────────────────
 etl: ## Run the full ETL pipeline
-	cd backend && python scripts/run_etl.py
+	cd backend && uv run python scripts/run_etl.py
 
 train: ## Train models for all available cities
-	cd backend && python scripts/run_training.py
+	cd backend && uv run python scripts/run_training.py
 
 retrain: ## Trigger scheduled retraining check
-	cd backend && python scripts/scheduled_retrain.py
+	cd backend && uv run python scripts/scheduled_retrain.py
 
 # ─────────────────────────────────────────────
 # Code quality
 # ─────────────────────────────────────────────
 lint: ## Run ruff linter on backend
-	cd backend && ruff check src/ api/ scripts/
+	cd backend && uv run ruff check src/ api/ scripts/
 
 format: ## Auto-format backend code
-	cd backend && ruff format src/ api/ scripts/
+	cd backend && uv run ruff format src/ api/ scripts/
 
 lint-fix: ## Auto-fix lint issues
-	cd backend && ruff check --fix src/ api/ scripts/
+	cd backend && uv ruff check --fix src/ api/ scripts/
 
 # ─────────────────────────────────────────────
 # Testing
 # ─────────────────────────────────────────────
-test: ## Run all backend tests
-	cd backend && pytest tests/ -v --cov=src --cov-report=term-missing
+test-backend: ## Run all backend tests
+	cd backend && uv run pytest tests/ -v --cov=src --cov-report=term-missing
+
+test-mobile: ## Run all mobile tests
+	cd mobile && flutter test
+
+test: test-backend test-mobile ## Run all tests
 
 test-api: ## Run API tests only
-	cd backend && pytest tests/test_api.py -v
+	cd backend && uv run pytest tests/test_api.py -v
 
 test-models: ## Run model tests only
-	cd backend && pytest tests/test_models.py -v
+	cd backend && uv run pytest tests/test_models.py -v
 
 # ─────────────────────────────────────────────
 # Utilities

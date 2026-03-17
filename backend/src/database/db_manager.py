@@ -37,9 +37,15 @@ class DatabaseManager:
     """
 
     def __init__(self, db_path: Path | None = None) -> None:
-        self._db_path = db_path or settings.database_path
+        # Keep explicit paths stable, but defer settings-based path lookup
+        # until connection time so tests can override settings safely.
+        self._db_path = db_path
         self._lock = threading.RLock()
         self._conn: duckdb.DuckDBPyConnection | None = None
+
+    def _resolve_db_path(self) -> Path:
+        """Return the effective DB path for this manager instance."""
+        return self._db_path or settings.database_path
 
     # ── Lifecycle ────────────────────────────────────────────────────────
 
@@ -47,9 +53,10 @@ class DatabaseManager:
         """Open the DuckDB connection and initialise schema."""
         if self._conn is not None:
             return
-        self._db_path.parent.mkdir(parents=True, exist_ok=True)
-        self._conn = duckdb.connect(str(self._db_path))
-        logger.info("DuckDB connected", path=str(self._db_path))
+        db_path = self._resolve_db_path()
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        self._conn = duckdb.connect(str(db_path))
+        logger.info("DuckDB connected", path=str(db_path))
         self._init_schema()
 
     def close(self) -> None:
@@ -184,7 +191,10 @@ class DatabaseManager:
         """Return True if a table or view with the given name exists."""
         with self.connection() as conn:
             result = conn.execute(
-                "SELECT count(*) FROM information_schema.tables WHERE table_name = ?",
+                (
+                    "SELECT count(*) FROM information_schema.tables "
+                    "WHERE table_name = ?"
+                ),
                 [table_name],
             ).fetchone()
             return bool(result and result[0] > 0)

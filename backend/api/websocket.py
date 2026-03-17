@@ -5,12 +5,13 @@
 """
 WebSocket module.
 
-Provides two WebSocket endpoints:
+Provides WebSocket endpoints:
 
 - /ws/{city_id}   : streams FetchProgress events while data is being
                     downloaded and processed for a city.
 - /ws/monitor     : broadcasts live monitoring snapshots every 5 seconds
                     for all active cities.
+- /ws             : backward-compatible alias of /ws/monitor.
 
 Message format (JSON):
     {
@@ -77,6 +78,26 @@ class ConnectionManager:
 
 
 manager = ConnectionManager()
+
+
+def _build_monitoring_payload() -> list[dict[str, Any]]:
+    """Build monitoring snapshot payload for all active cities."""
+    snapshots: list[dict[str, Any]] = []
+    for _city_id, monitor in _monitors.items():
+        snap = monitor.get_snapshot()
+        snapshots.append(
+            {
+                "city_id": snap.city_id,
+                "timestamp": snap.timestamp.isoformat(),
+                "rmse": snap.rmse,
+                "mae": snap.mae,
+                "avg_latency_ms": snap.avg_latency_ms,
+                "request_rate": snap.request_rate,
+                "n_predictions": snap.n_predictions,
+                "active_alerts": len(snap.active_alerts),
+            }
+        )
+    return snapshots
 
 
 # ── City fetch progress WebSocket ─────────────────────────────────────────
@@ -174,6 +195,12 @@ async def _handle_fetch(
 # ── Live monitoring broadcast WebSocket ───────────────────────────────────
 
 
+@ws_router.websocket("/ws")
+async def monitoring_ws_legacy(websocket: WebSocket) -> None:
+    """Legacy endpoint retained for clients that still connect to `/ws`."""
+    await monitoring_ws(websocket)
+
+
 @ws_router.websocket("/ws/monitor")
 async def monitoring_ws(websocket: WebSocket) -> None:
     """
@@ -185,25 +212,12 @@ async def monitoring_ws(websocket: WebSocket) -> None:
 
     try:
         while True:
-            snapshots = []
-            for _city_id, monitor in _monitors.items():
-                snap = monitor.get_snapshot()
-                snapshots.append(
-                    {
-                        "city_id": snap.city_id,
-                        "timestamp": snap.timestamp.isoformat(),
-                        "rmse": snap.rmse,
-                        "mae": snap.mae,
-                        "avg_latency_ms": snap.avg_latency_ms,
-                        "request_rate": snap.request_rate,
-                        "n_predictions": snap.n_predictions,
-                        "active_alerts": len(snap.active_alerts),
-                    }
-                )
-
             await manager.send(
                 websocket,
-                {"type": "monitoring", "payload": snapshots},
+                {
+                    "type": "monitoring",
+                    "payload": _build_monitoring_payload(),
+                },
             )
             await asyncio.sleep(5)
 

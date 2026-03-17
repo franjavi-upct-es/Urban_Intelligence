@@ -8,7 +8,7 @@ FastAPI application factory.
 Mounts:
 - REST API routers: /api/v1/cities, /predictions, /monitoring, /experiments
 - GraphQL endpoint: /graphql (Strawberry)
-- WebSocket: /ws/{city_id}
+- WebSocket: /ws/{city_id}, /ws/monitor, /ws (legacy alias)
 - Health check: /health
 - Prometheus metrics: /metrics
 """

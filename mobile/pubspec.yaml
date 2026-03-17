@@ -1,0 +1,65 @@
+# mobile/pubspec.yaml
+# Urban Intelligence Framework v2.0.0
+# Flutter mobile app — Dart package manifest
+
+name: urban_intelligence
+description: Urban Intelligence mobile app for Airbnb price prediction.
+publish_to: none
+version: 2.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # HTTP & networking
+  http: ^1.2.1
+  dio: ^5.4.3
+  web_socket_channel: ^3.0.0
+
+  # State management
+  provider: ^6.1.2
+  riverpod: ^2.5.1
+  flutter_riverpod: ^2.5.1
+
+  # Navigation
+  go_router: ^14.0.0
+
+  # UI components
+  fl_chart: ^0.67.0
+  cached_network_image: ^3.3.1
+  shimmer: ^3.0.0
+
+  # Storage
+  shared_preferences: ^2.2.3
+  flutter_secure_storage: ^9.0.0
+
+  # Fonts — Inter loaded at runtime via Google Fonts (no local files required)
+  google_fonts: ^6.2.1
+
+  # Utilities
+  intl: ^0.19.0
+  json_annotation: ^4.9.0
+  equatable: ^2.0.5
+  freezed_annotation: ^2.4.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.9
+  json_serializable: ^6.8.0
+  freezed: ^2.5.2
+  mockito: ^5.4.4
+
+flutter:
+  uses-material-design: true
+  # No local asset or font directories required.
+  # Inter font is loaded at runtime via the google_fonts package.
+  # To add local images in the future, create assets/images/ and
+  # uncomment the block below:
+  #
+  # assets:
+  #   - assets/images/
