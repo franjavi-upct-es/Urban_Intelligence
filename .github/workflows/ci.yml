@@ -37,9 +37,9 @@ jobs:
         working-directory: backend
         run: |
           if [ -f uv.lock ]; then
-            uv sync --group dev --frozen
+            uv sync --extra dev --frozen
           else
-            uv sync --group dev
+            uv sync --extra dev
           fi
 
       - name: Lint with ruff
